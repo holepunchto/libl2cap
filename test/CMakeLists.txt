@@ -7,6 +7,7 @@ list(APPEND tests
   backpressure
   reentrant-close
   drain-after-close
+  drain-not-lost
   mtu
   events
   server

@@ -407,7 +407,7 @@ l2cap_channel_write (l2cap_channel_t *channel, const uint8_t *data, size_t len, 
   else channel->_write_head = chunk;
   channel->_write_tail = chunk;
 
-  channel->_on_drain = cb;
+  if (cb) channel->_on_drain = cb;
 
   return L2CAP_WRITE_QUEUED;
 }

@@ -178,7 +178,9 @@ l2cap_channel_read_stop (l2cap_channel_t *channel);
 
 /**
  * Send one SDU of at most `l2cap_channel_snd_mtu()` bytes. Returns
- * `L2CAP_WRITE_SENT`, `L2CAP_WRITE_QUEUED`, or a negated errno.
+ * `L2CAP_WRITE_SENT`, `L2CAP_WRITE_QUEUED`, or a negated errno. `cb` may be
+ * NULL; when several writes queue, the last non-NULL `cb` is the one that
+ * fires on drain.
  */
 int
 l2cap_channel_write (l2cap_channel_t *channel, const uint8_t *data, size_t len, l2cap_drain_cb cb);
