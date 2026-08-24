@@ -1,14 +1,8 @@
 # libl2cap
 
-I/O-agnostic Bluetooth L2CAP channels for Linux.
+I/O-agnostic Bluetooth L2CAP channels for Linux. Wraps the kernel's `AF_BLUETOOTH`/`SOCK_SEQPACKET` sockets behind a sans-I/O contract: the library owns the protocol state, you own the event loop. Linux-only by design: other platforms expose L2CAP through entirely different native APIs.
 
-The library wraps the kernel's `AF_BLUETOOTH`/`SOCK_SEQPACKET` sockets behind
-a sans-I/O contract: it owns the protocol state, you own the event loop. Watch
-`l2cap_channel_fd()` for the bits `l2cap_channel_events()` asks for, and hand
-the results to `l2cap_channel_process()`.
-
-Linux-only by design: other platforms expose L2CAP through entirely different
-native APIs.
+## Usage
 
 ```c
 #include <l2cap.h>
@@ -25,9 +19,9 @@ l2cap_channel_connect(&channel, &local, &peer, 0x80, on_connect);
 // then l2cap_channel_process(&channel, fired)
 ```
 
-See `include/l2cap.h` for the full API and `test/` for runnable examples —
-the state machine is exercised with plain Unix `SOCK_SEQPACKET` socketpairs,
-no Bluetooth adapter required.
+## API
+
+See [`include/l2cap.h`](include/l2cap.h) for the public API and [`test/`](test) for runnable examples — the state machine is exercised with plain Unix `SOCK_SEQPACKET` socketpairs, no Bluetooth adapter required.
 
 ## License
 
