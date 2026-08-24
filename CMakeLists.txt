@@ -58,13 +58,11 @@ target_link_libraries(
     l2cap
 )
 
+install(TARGETS l2cap_shared l2cap_static)
+
+install(FILES include/l2cap.h DESTINATION include)
+
 if(PROJECT_IS_TOP_LEVEL)
-  install(TARGETS l2cap_shared l2cap_static)
-
-  install(FILES include/l2cap.h DESTINATION include)
-endif()
-
-if(PROJECT_IS_TOP_LEVEL OR L2CAP_ENABLE_TESTS)
   enable_testing()
 
   add_subdirectory(test)

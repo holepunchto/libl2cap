@@ -11,13 +11,13 @@
 static int drained = 0;
 
 static void
-on_drain (l2cap_channel_t *channel) {
+on_drain(l2cap_channel_t *channel) {
   (void) channel;
   drained++;
 }
 
 int
-main (void) {
+main(void) {
   int fds[2];
   assert(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, fds) == 0);
 

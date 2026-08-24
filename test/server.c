@@ -1,4 +1,4 @@
-// The server machinery — attach, accept_start/stop, events, process, accept —
+// The server machinery - attach, accept_start/stop, events, process, accept -
 // runs against a listening Unix SOCK_SEQPACKET socket: same accept semantics
 // as L2CAP, no adapter required. Only l2cap_server_listen() itself needs
 // Bluetooth.
@@ -20,13 +20,13 @@ static char received[64];
 static size_t received_len = 0;
 
 static void
-on_connection (l2cap_server_t *server) {
+on_connection(l2cap_server_t *server) {
   (void) server;
   connections++;
 }
 
 static void
-on_read (l2cap_channel_t *channel, size_t len, const uint8_t *data) {
+on_read(l2cap_channel_t *channel, size_t len, const uint8_t *data) {
   (void) channel;
 
   if (len == 0) return;
@@ -37,7 +37,7 @@ on_read (l2cap_channel_t *channel, size_t len, const uint8_t *data) {
 }
 
 int
-main (void) {
+main(void) {
   // An abstract-namespace address, pid-suffixed so parallel runs never collide
   struct sockaddr_un addr;
   memset(&addr, 0, sizeof(addr));

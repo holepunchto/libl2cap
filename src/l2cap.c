@@ -48,8 +48,8 @@ struct l2cap_sockaddr_l2 {
   uint8_t l2_bdaddr_type;
 };
 
-// The kernel ABI this struct redeclares is frozen; catch any drift — size or
-// field order — at compile time (C99 has no static_assert)
+// The kernel ABI this struct redeclares is frozen; catch any drift - size or
+// field order - at compile time (C99 has no static_assert)
 typedef char l2cap_sockaddr_l2_size_check[sizeof(struct l2cap_sockaddr_l2) == 14 ? 1 : -1];
 
 typedef char l2cap_sockaddr_l2_layout_check
@@ -86,7 +86,7 @@ enum {
 };
 
 static int
-l2cap__hexval (char c) {
+l2cap__hexval(char c) {
   if (c >= '0' && c <= '9') return c - '0';
   if (c >= 'a' && c <= 'f') return c - 'a' + 10;
   if (c >= 'A' && c <= 'F') return c - 'A' + 10;
@@ -94,7 +94,7 @@ l2cap__hexval (char c) {
 }
 
 int
-l2cap_addr_init (const char *str, uint8_t type, l2cap_addr_t *addr) {
+l2cap_addr_init(const char *str, uint8_t type, l2cap_addr_t *addr) {
   if (strlen(str) != 17) return -EINVAL;
 
   // bdaddr_t is little-endian: byte 0 is the last octet of the string
@@ -115,20 +115,20 @@ l2cap_addr_init (const char *str, uint8_t type, l2cap_addr_t *addr) {
 }
 
 void
-l2cap_addr_to_string (const l2cap_addr_t *addr, char *str) {
+l2cap_addr_to_string(const l2cap_addr_t *addr, char *str) {
   const uint8_t *b = addr->bdaddr;
   snprintf(str, 18, "%02X:%02X:%02X:%02X:%02X:%02X", b[5], b[4], b[3], b[2], b[1], b[0]);
 }
 
 void
-l2cap_channel_init (l2cap_channel_t *channel, void *data) {
+l2cap_channel_init(l2cap_channel_t *channel, void *data) {
   memset(channel, 0, sizeof(*channel));
   channel->data = data;
   channel->_fd = -1;
 }
 
 static int
-l2cap__apply_security (int fd, uint8_t level) {
+l2cap__apply_security(int fd, uint8_t level) {
   if (level == 0) return 0; // not requested; kernel default applies
 
   struct l2cap_bt_security security;
@@ -141,7 +141,7 @@ l2cap__apply_security (int fd, uint8_t level) {
 }
 
 int
-l2cap_channel_set_security (l2cap_channel_t *channel, uint8_t level) {
+l2cap_channel_set_security(l2cap_channel_t *channel, uint8_t level) {
   if (channel->_state != L2CAP_STATE_IDLE) return -EINVAL;
   if (level < L2CAP_SECURITY_LOW || level > L2CAP_SECURITY_FIPS) return -EINVAL;
   channel->_security = level;
@@ -149,7 +149,7 @@ l2cap_channel_set_security (l2cap_channel_t *channel, uint8_t level) {
 }
 
 static int
-l2cap_channel__opened (l2cap_channel_t *channel) {
+l2cap_channel__opened(l2cap_channel_t *channel) {
   uint16_t mtu = 0;
   socklen_t len = sizeof(mtu);
   if (getsockopt(channel->_fd, SOL_BLUETOOTH, BT_RCVMTU, &mtu, &len) != 0 || mtu == 0) {
@@ -178,10 +178,10 @@ l2cap_channel__opened (l2cap_channel_t *channel) {
 
 // A Bluetooth descriptor carries its endpoints; other families (e.g. the Unix
 // socketpairs used in tests) leave them zeroed. The kernel fills the PSM on
-// the peer name too, so one getpeername returns bdaddr, type and PSM at once —
+// the peer name too, so one getpeername returns bdaddr, type and PSM at once -
 // and unlike getsockname's sport, that PSM is correct for accepted channels.
 static void
-l2cap_channel__fill_endpoints (l2cap_channel_t *channel) {
+l2cap_channel__fill_endpoints(l2cap_channel_t *channel) {
   struct l2cap_sockaddr_l2 addr;
   socklen_t len = sizeof(addr);
 
@@ -196,7 +196,7 @@ l2cap_channel__fill_endpoints (l2cap_channel_t *channel) {
 }
 
 int
-l2cap_channel_connect (l2cap_channel_t *channel, const l2cap_addr_t *local, const l2cap_addr_t *peer, uint16_t psm, l2cap_connect_cb cb) {
+l2cap_channel_connect(l2cap_channel_t *channel, const l2cap_addr_t *local, const l2cap_addr_t *peer, uint16_t psm, l2cap_connect_cb cb) {
   if (channel->_state != L2CAP_STATE_IDLE) return -EINVAL;
 
   int fd = socket(AF_BLUETOOTH, SOCK_SEQPACKET | SOCK_NONBLOCK | SOCK_CLOEXEC, BTPROTO_L2CAP);
@@ -243,7 +243,7 @@ l2cap_channel_connect (l2cap_channel_t *channel, const l2cap_addr_t *local, cons
 }
 
 int
-l2cap_channel_accept (l2cap_channel_t *channel, int fd) {
+l2cap_channel_accept(l2cap_channel_t *channel, int fd) {
   if (channel->_state != L2CAP_STATE_IDLE) {
     close(fd); // ownership is taken in every case
     return -EINVAL;
@@ -273,12 +273,12 @@ l2cap_channel_accept (l2cap_channel_t *channel, int fd) {
 }
 
 int
-l2cap_channel_fd (const l2cap_channel_t *channel) {
+l2cap_channel_fd(const l2cap_channel_t *channel) {
   return channel->_fd;
 }
 
 int
-l2cap_channel_events (const l2cap_channel_t *channel) {
+l2cap_channel_events(const l2cap_channel_t *channel) {
   switch (channel->_state) {
   case L2CAP_STATE_CONNECTING:
     return L2CAP_WRITABLE;
@@ -296,7 +296,7 @@ l2cap_channel_events (const l2cap_channel_t *channel) {
 }
 
 static int
-l2cap_channel__flush (l2cap_channel_t *channel) {
+l2cap_channel__flush(l2cap_channel_t *channel) {
   while (channel->_write_head) {
     l2cap_chunk_t *chunk = channel->_write_head;
     if (send(channel->_fd, chunk->data, chunk->len, MSG_DONTWAIT | MSG_NOSIGNAL) < 0) {
@@ -324,7 +324,7 @@ l2cap_channel__flush (l2cap_channel_t *channel) {
 // drains as early as possible. Reads come last and every callback may close
 // the channel, so each stage re-checks the state before touching the socket.
 int
-l2cap_channel_process (l2cap_channel_t *channel, int events) {
+l2cap_channel_process(l2cap_channel_t *channel, int events) {
   if (channel->_state == L2CAP_STATE_CONNECTING && (events & L2CAP_WRITABLE)) {
     int err = 0;
     socklen_t len = sizeof(err);
@@ -372,7 +372,7 @@ l2cap_channel_process (l2cap_channel_t *channel, int events) {
 }
 
 int
-l2cap_channel_read_start (l2cap_channel_t *channel, l2cap_read_cb cb) {
+l2cap_channel_read_start(l2cap_channel_t *channel, l2cap_read_cb cb) {
   if (channel->_state != L2CAP_STATE_OPEN) return -ENOTCONN;
   channel->_reading = 1;
   channel->_on_read = cb;
@@ -380,13 +380,13 @@ l2cap_channel_read_start (l2cap_channel_t *channel, l2cap_read_cb cb) {
 }
 
 int
-l2cap_channel_read_stop (l2cap_channel_t *channel) {
+l2cap_channel_read_stop(l2cap_channel_t *channel) {
   channel->_reading = 0;
   return 0;
 }
 
 int
-l2cap_channel_write (l2cap_channel_t *channel, const uint8_t *data, size_t len, l2cap_drain_cb cb) {
+l2cap_channel_write(l2cap_channel_t *channel, const uint8_t *data, size_t len, l2cap_drain_cb cb) {
   if (channel->_state != L2CAP_STATE_OPEN) return -ENOTCONN;
   if (len == 0) return L2CAP_WRITE_SENT;
   if (len > channel->_snd_mtu) return -EMSGSIZE;
@@ -413,27 +413,27 @@ l2cap_channel_write (l2cap_channel_t *channel, const uint8_t *data, size_t len, 
 }
 
 uint16_t
-l2cap_channel_psm (const l2cap_channel_t *channel) {
+l2cap_channel_psm(const l2cap_channel_t *channel) {
   return channel->_psm;
 }
 
 uint16_t
-l2cap_channel_rcv_mtu (const l2cap_channel_t *channel) {
+l2cap_channel_rcv_mtu(const l2cap_channel_t *channel) {
   return channel->_rcv_mtu;
 }
 
 uint16_t
-l2cap_channel_snd_mtu (const l2cap_channel_t *channel) {
+l2cap_channel_snd_mtu(const l2cap_channel_t *channel) {
   return channel->_snd_mtu;
 }
 
 const l2cap_addr_t *
-l2cap_channel_peer (const l2cap_channel_t *channel) {
+l2cap_channel_peer(const l2cap_channel_t *channel) {
   return &channel->_peer;
 }
 
 void
-l2cap_channel_close (l2cap_channel_t *channel) {
+l2cap_channel_close(l2cap_channel_t *channel) {
   if (channel->_state == L2CAP_STATE_CLOSED) return;
 
   channel->_reading = 0;
@@ -456,7 +456,7 @@ l2cap_channel_close (l2cap_channel_t *channel) {
 }
 
 static int
-l2cap_server__set_nonblock_cloexec (int fd) {
+l2cap_server__set_nonblock_cloexec(int fd) {
   int flags = fcntl(fd, F_GETFL, 0);
   if (flags < 0 || fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0) return -errno;
 
@@ -466,14 +466,14 @@ l2cap_server__set_nonblock_cloexec (int fd) {
 }
 
 void
-l2cap_server_init (l2cap_server_t *server, void *data) {
+l2cap_server_init(l2cap_server_t *server, void *data) {
   memset(server, 0, sizeof(*server));
   server->data = data;
   server->_fd = -1;
 }
 
 int
-l2cap_server_set_security (l2cap_server_t *server, uint8_t level) {
+l2cap_server_set_security(l2cap_server_t *server, uint8_t level) {
   if (server->_state != L2CAP_SERVER_STATE_IDLE) return -EINVAL;
   if (level < L2CAP_SECURITY_LOW || level > L2CAP_SECURITY_FIPS) return -EINVAL;
   server->_security = level;
@@ -481,7 +481,7 @@ l2cap_server_set_security (l2cap_server_t *server, uint8_t level) {
 }
 
 int
-l2cap_server_listen (l2cap_server_t *server, const l2cap_addr_t *local, uint16_t psm, int backlog) {
+l2cap_server_listen(l2cap_server_t *server, const l2cap_addr_t *local, uint16_t psm, int backlog) {
   if (server->_state != L2CAP_SERVER_STATE_IDLE) return -EINVAL;
 
   int fd = socket(AF_BLUETOOTH, SOCK_SEQPACKET | SOCK_NONBLOCK | SOCK_CLOEXEC, BTPROTO_L2CAP);
@@ -523,7 +523,7 @@ l2cap_server_listen (l2cap_server_t *server, const l2cap_addr_t *local, uint16_t
 }
 
 int
-l2cap_server_attach (l2cap_server_t *server, int fd) {
+l2cap_server_attach(l2cap_server_t *server, int fd) {
   if (server->_state != L2CAP_SERVER_STATE_IDLE) {
     close(fd); // ownership is taken in every case
     return -EINVAL;
@@ -552,25 +552,25 @@ l2cap_server_attach (l2cap_server_t *server, int fd) {
 }
 
 int
-l2cap_server_fd (const l2cap_server_t *server) {
+l2cap_server_fd(const l2cap_server_t *server) {
   return server->_fd;
 }
 
 int
-l2cap_server_events (const l2cap_server_t *server) {
+l2cap_server_events(const l2cap_server_t *server) {
   if (server->_state != L2CAP_SERVER_STATE_LISTENING) return 0;
   return server->_accepting ? L2CAP_READABLE : 0;
 }
 
 int
-l2cap_server_process (l2cap_server_t *server, int events) {
+l2cap_server_process(l2cap_server_t *server, int events) {
   if (server->_state != L2CAP_SERVER_STATE_LISTENING) return 0;
   if (server->_accepting && (events & L2CAP_READABLE)) server->_on_connection(server);
   return 0;
 }
 
 int
-l2cap_server_accept_start (l2cap_server_t *server, l2cap_connection_cb cb) {
+l2cap_server_accept_start(l2cap_server_t *server, l2cap_connection_cb cb) {
   if (server->_state != L2CAP_SERVER_STATE_LISTENING) return -EINVAL;
   server->_accepting = 1;
   server->_on_connection = cb;
@@ -578,17 +578,18 @@ l2cap_server_accept_start (l2cap_server_t *server, l2cap_connection_cb cb) {
 }
 
 int
-l2cap_server_accept_stop (l2cap_server_t *server) {
+l2cap_server_accept_stop(l2cap_server_t *server) {
   server->_accepting = 0;
   return 0;
 }
 
 int
-l2cap_server_accept (l2cap_server_t *server, l2cap_channel_t *channel) {
+l2cap_server_accept(l2cap_server_t *server, l2cap_channel_t *channel) {
   if (server->_state != L2CAP_SERVER_STATE_LISTENING) return -EINVAL;
 
   int fd;
-  do fd = accept4(server->_fd, NULL, NULL, SOCK_NONBLOCK | SOCK_CLOEXEC);
+  do
+    fd = accept4(server->_fd, NULL, NULL, SOCK_NONBLOCK | SOCK_CLOEXEC);
   while (fd < 0 && errno == EINTR);
   if (fd < 0) return -errno;
 
@@ -596,17 +597,17 @@ l2cap_server_accept (l2cap_server_t *server, l2cap_channel_t *channel) {
 }
 
 uint16_t
-l2cap_server_psm (const l2cap_server_t *server) {
+l2cap_server_psm(const l2cap_server_t *server) {
   return server->_psm;
 }
 
 const l2cap_addr_t *
-l2cap_server_local (const l2cap_server_t *server) {
+l2cap_server_local(const l2cap_server_t *server) {
   return &server->_local;
 }
 
 void
-l2cap_server_close (l2cap_server_t *server) {
+l2cap_server_close(l2cap_server_t *server) {
   if (server->_state == L2CAP_SERVER_STATE_CLOSED) return;
 
   server->_accepting = 0;

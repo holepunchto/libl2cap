@@ -21,7 +21,7 @@ l2cap_channel_connect(&channel, &local, &peer, 0x80, on_connect);
 
 ## API
 
-See [`include/l2cap.h`](include/l2cap.h) for the public API and [`test/`](test) for runnable examples — the state machine is exercised with plain Unix `SOCK_SEQPACKET` socketpairs, no Bluetooth adapter required.
+See [`include/l2cap.h`](include/l2cap.h) for the public API and [`test/`](test) for runnable examples - the state machine is exercised with plain Unix `SOCK_SEQPACKET` socketpairs, no Bluetooth adapter required.
 
 ## License
 

@@ -15,7 +15,7 @@ static size_t received_len = 0;
 static int eof_seen = 0;
 
 static void
-on_read (l2cap_channel_t *channel, size_t len, const uint8_t *data) {
+on_read(l2cap_channel_t *channel, size_t len, const uint8_t *data) {
   (void) channel;
 
   if (len == 0) {
@@ -29,7 +29,7 @@ on_read (l2cap_channel_t *channel, size_t len, const uint8_t *data) {
 }
 
 static void
-pump (l2cap_channel_t *channel) {
+pump(l2cap_channel_t *channel) {
   int events = l2cap_channel_events(channel);
   if (events == 0) return;
 
@@ -50,7 +50,7 @@ pump (l2cap_channel_t *channel) {
 }
 
 int
-main (void) {
+main(void) {
   int fds[2];
   assert(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, fds) == 0);
 

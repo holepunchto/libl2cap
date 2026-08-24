@@ -11,7 +11,7 @@
 #include <l2cap.h>
 
 int
-main (void) {
+main(void) {
   l2cap_addr_t local, peer;
   assert(l2cap_addr_init("78:AF:08:C0:40:3A", L2CAP_BDADDR_LE_PUBLIC, &local) == 0);
   assert(l2cap_addr_init("6C:3E:00:AB:78:1D", L2CAP_BDADDR_LE_RANDOM, &peer) == 0);
