@@ -131,7 +131,8 @@ l2cap_channel_set_security (l2cap_channel_t *channel, uint8_t level);
 
 /**
  * Start a non-blocking connect to `peer` on `psm`, bound to the `local`
- * adapter address. Poll `l2cap_channel_fd()` for `l2cap_channel_events()`
+ * adapter address. The channel must be initialised and idle — anything else
+ * is -EINVAL. Poll `l2cap_channel_fd()` for `l2cap_channel_events()`
  * and feed the results to `l2cap_channel_process()`; `cb` fires when the
  * connect settles.
  */

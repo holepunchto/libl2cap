@@ -197,6 +197,8 @@ l2cap_channel__fill_endpoints (l2cap_channel_t *channel) {
 
 int
 l2cap_channel_connect (l2cap_channel_t *channel, const l2cap_addr_t *local, const l2cap_addr_t *peer, uint16_t psm, l2cap_connect_cb cb) {
+  if (channel->_state != L2CAP_STATE_IDLE) return -EINVAL;
+
   int fd = socket(AF_BLUETOOTH, SOCK_SEQPACKET | SOCK_NONBLOCK | SOCK_CLOEXEC, BTPROTO_L2CAP);
   if (fd < 0) return -errno;
 
