@@ -587,7 +587,9 @@ int
 l2cap_server_accept (l2cap_server_t *server, l2cap_channel_t *channel) {
   if (server->_state != L2CAP_SERVER_STATE_LISTENING) return -EINVAL;
 
-  int fd = accept4(server->_fd, NULL, NULL, SOCK_NONBLOCK | SOCK_CLOEXEC);
+  int fd;
+  do fd = accept4(server->_fd, NULL, NULL, SOCK_NONBLOCK | SOCK_CLOEXEC);
+  while (fd < 0 && errno == EINTR);
   if (fd < 0) return -errno;
 
   return l2cap_channel_accept(channel, fd);
