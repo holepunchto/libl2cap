@@ -11,7 +11,7 @@
 #include <l2cap.h>
 
 int
-main(void) {
+main (void) {
   int fds[2];
   assert(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, fds) == 0);
 

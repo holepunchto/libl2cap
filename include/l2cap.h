@@ -101,20 +101,20 @@ struct l2cap_channel_s {
  * Parse "AA:BB:CC:DD:EE:FF" into an address of the given type.
  */
 int
-l2cap_addr_init(const char *str, uint8_t type, l2cap_addr_t *addr);
+l2cap_addr_init (const char *str, uint8_t type, l2cap_addr_t *addr);
 
 /**
  * Format an address back into `str`, which must hold at least 18 bytes.
  */
 void
-l2cap_addr_to_string(const l2cap_addr_t *addr, char *str);
+l2cap_addr_to_string (const l2cap_addr_t *addr, char *str);
 
 /**
  * Initialise a channel. `data` is the caller's opaque pointer, available on
  * every callback via `channel->data`.
  */
 void
-l2cap_channel_init(l2cap_channel_t *channel, void *data);
+l2cap_channel_init (l2cap_channel_t *channel, void *data);
 
 /**
  * Require a security level for the link, applied when the socket is created —
@@ -127,7 +127,7 @@ l2cap_channel_init(l2cap_channel_t *channel, void *data);
  * whether its use case can pair; the library does not.
  */
 int
-l2cap_channel_set_security(l2cap_channel_t *channel, uint8_t level);
+l2cap_channel_set_security (l2cap_channel_t *channel, uint8_t level);
 
 /**
  * Start a non-blocking connect to `peer` on `psm`, bound to the `local`
@@ -136,7 +136,7 @@ l2cap_channel_set_security(l2cap_channel_t *channel, uint8_t level);
  * connect settles.
  */
 int
-l2cap_channel_connect(l2cap_channel_t *channel, const l2cap_addr_t *local, const l2cap_addr_t *peer, uint16_t psm, l2cap_connect_cb cb);
+l2cap_channel_connect (l2cap_channel_t *channel, const l2cap_addr_t *local, const l2cap_addr_t *peer, uint16_t psm, l2cap_connect_cb cb);
 
 /**
  * Adopt an already-connected SOCK_SEQPACKET descriptor into an initialised,
@@ -145,10 +145,10 @@ l2cap_channel_connect(l2cap_channel_t *channel, const l2cap_addr_t *local, const
  * switched to non-blocking, close-on-exec mode.
  */
 int
-l2cap_channel_accept(l2cap_channel_t *channel, int fd);
+l2cap_channel_accept (l2cap_channel_t *channel, int fd);
 
 int
-l2cap_channel_fd(const l2cap_channel_t *channel);
+l2cap_channel_fd (const l2cap_channel_t *channel);
 
 /**
  * The caller's side of the event-loop contract: register the returned bits
@@ -158,7 +158,7 @@ l2cap_channel_fd(const l2cap_channel_t *channel);
  * at all.
  */
 int
-l2cap_channel_events(const l2cap_channel_t *channel);
+l2cap_channel_events (const l2cap_channel_t *channel);
 
 /**
  * Advance the channel after the caller's loop reported `events`. Invokes the
@@ -166,32 +166,32 @@ l2cap_channel_events(const l2cap_channel_t *channel);
  * fatal socket error, after which the channel must be closed.
  */
 int
-l2cap_channel_process(l2cap_channel_t *channel, int events);
+l2cap_channel_process (l2cap_channel_t *channel, int events);
 
 int
-l2cap_channel_read_start(l2cap_channel_t *channel, l2cap_read_cb cb);
+l2cap_channel_read_start (l2cap_channel_t *channel, l2cap_read_cb cb);
 
 int
-l2cap_channel_read_stop(l2cap_channel_t *channel);
+l2cap_channel_read_stop (l2cap_channel_t *channel);
 
 /**
  * Send one SDU of at most `l2cap_channel_snd_mtu()` bytes. Returns
  * `L2CAP_WRITE_SENT`, `L2CAP_WRITE_QUEUED`, or a negated errno.
  */
 int
-l2cap_channel_write(l2cap_channel_t *channel, const uint8_t *data, size_t len, l2cap_drain_cb cb);
+l2cap_channel_write (l2cap_channel_t *channel, const uint8_t *data, size_t len, l2cap_drain_cb cb);
 
 uint16_t
-l2cap_channel_psm(const l2cap_channel_t *channel);
+l2cap_channel_psm (const l2cap_channel_t *channel);
 
 uint16_t
-l2cap_channel_rcv_mtu(const l2cap_channel_t *channel);
+l2cap_channel_rcv_mtu (const l2cap_channel_t *channel);
 
 uint16_t
-l2cap_channel_snd_mtu(const l2cap_channel_t *channel);
+l2cap_channel_snd_mtu (const l2cap_channel_t *channel);
 
 const l2cap_addr_t *
-l2cap_channel_peer(const l2cap_channel_t *channel);
+l2cap_channel_peer (const l2cap_channel_t *channel);
 
 /**
  * Close the descriptor and free the channel's internal buffers. Synchronous
@@ -201,7 +201,7 @@ l2cap_channel_peer(const l2cap_channel_t *channel);
  * `l2cap_channel_init()`.
  */
 void
-l2cap_channel_close(l2cap_channel_t *channel);
+l2cap_channel_close (l2cap_channel_t *channel);
 
 /**
  * At least one incoming connection is ready. The callback must make
@@ -231,14 +231,14 @@ struct l2cap_server_s {
 };
 
 void
-l2cap_server_init(l2cap_server_t *server, void *data);
+l2cap_server_init (l2cap_server_t *server, void *data);
 
 /**
  * Require a security level for accepted links, applied when the socket is
  * created — call it between `l2cap_server_init()` and `l2cap_server_listen()`.
  */
 int
-l2cap_server_set_security(l2cap_server_t *server, uint8_t level);
+l2cap_server_set_security (l2cap_server_t *server, uint8_t level);
 
 /**
  * Bind to the `local` adapter address and listen on `psm`. Pass `psm` 0 to
@@ -247,7 +247,7 @@ l2cap_server_set_security(l2cap_server_t *server, uint8_t level);
  * `l2cap_server_accept_start()`.
  */
 int
-l2cap_server_listen(l2cap_server_t *server, const l2cap_addr_t *local, uint16_t psm, int backlog);
+l2cap_server_listen (l2cap_server_t *server, const l2cap_addr_t *local, uint16_t psm, int backlog);
 
 /**
  * Adopt an already-listening SOCK_SEQPACKET descriptor (socket activation,
@@ -256,35 +256,35 @@ l2cap_server_listen(l2cap_server_t *server, const l2cap_addr_t *local, uint16_t 
  * close-on-exec mode.
  */
 int
-l2cap_server_attach(l2cap_server_t *server, int fd);
+l2cap_server_attach (l2cap_server_t *server, int fd);
 
 int
-l2cap_server_fd(const l2cap_server_t *server);
+l2cap_server_fd (const l2cap_server_t *server);
 
 int
-l2cap_server_events(const l2cap_server_t *server);
+l2cap_server_events (const l2cap_server_t *server);
 
 int
-l2cap_server_process(l2cap_server_t *server, int events);
+l2cap_server_process (l2cap_server_t *server, int events);
 
 int
-l2cap_server_accept_start(l2cap_server_t *server, l2cap_connection_cb cb);
+l2cap_server_accept_start (l2cap_server_t *server, l2cap_connection_cb cb);
 
 int
-l2cap_server_accept_stop(l2cap_server_t *server);
+l2cap_server_accept_stop (l2cap_server_t *server);
 
 /**
  * Accept one pending connection into `channel`, which must be initialised
  * and idle. Returns 0, or a negated errno — -EAGAIN when nothing is pending.
  */
 int
-l2cap_server_accept(l2cap_server_t *server, l2cap_channel_t *channel);
+l2cap_server_accept (l2cap_server_t *server, l2cap_channel_t *channel);
 
 uint16_t
-l2cap_server_psm(const l2cap_server_t *server);
+l2cap_server_psm (const l2cap_server_t *server);
 
 const l2cap_addr_t *
-l2cap_server_local(const l2cap_server_t *server);
+l2cap_server_local (const l2cap_server_t *server);
 
 /**
  * Close the listening descriptor. Synchronous and idempotent; accepted
@@ -292,7 +292,7 @@ l2cap_server_local(const l2cap_server_t *server);
  * `l2cap_server_init()`.
  */
 void
-l2cap_server_close(l2cap_server_t *server);
+l2cap_server_close (l2cap_server_t *server);
 
 #ifdef __cplusplus
 }

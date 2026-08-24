@@ -11,7 +11,7 @@
 static int reads = 0;
 
 static void
-on_read(l2cap_channel_t *channel, size_t len, const uint8_t *data) {
+on_read (l2cap_channel_t *channel, size_t len, const uint8_t *data) {
   (void) len;
   (void) data;
 
@@ -20,7 +20,7 @@ on_read(l2cap_channel_t *channel, size_t len, const uint8_t *data) {
 }
 
 int
-main(void) {
+main (void) {
   int fds[2];
   assert(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, fds) == 0);
 

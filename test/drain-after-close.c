@@ -11,13 +11,13 @@
 static int drained = 0;
 
 static void
-on_drain(l2cap_channel_t *channel) {
+on_drain (l2cap_channel_t *channel) {
   (void) channel;
   drained++;
 }
 
 int
-main(void) {
+main (void) {
   int fds[2];
   assert(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, fds) == 0);
 
@@ -43,7 +43,8 @@ main(void) {
 
   // Make room on the peer side, then poke the closed channel: nothing happens
   uint8_t buf[sizeof(msg)];
-  while (recv(fds[1], buf, sizeof(buf), MSG_DONTWAIT) > 0);
+  while (recv(fds[1], buf, sizeof(buf), MSG_DONTWAIT) > 0)
+    ;
 
   assert(l2cap_channel_process(&a, L2CAP_WRITABLE) == 0);
   assert(drained == 0);

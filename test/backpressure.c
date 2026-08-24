@@ -12,13 +12,13 @@
 static int drained = 0;
 
 static void
-on_drain(l2cap_channel_t *channel) {
+on_drain (l2cap_channel_t *channel) {
   (void) channel;
   drained++;
 }
 
 int
-main(void) {
+main (void) {
   int fds[2];
   assert(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, fds) == 0);
 
@@ -48,7 +48,8 @@ main(void) {
   // Drain the peer side, then let the channel flush
   uint8_t buf[sizeof(msg)];
   while (drained == 0) {
-    while (recv(fds[1], buf, sizeof(buf), MSG_DONTWAIT) > 0);
+    while (recv(fds[1], buf, sizeof(buf), MSG_DONTWAIT) > 0)
+      ;
 
     // The peer is already drained, so POLLOUT is immediate: no need to block
     struct pollfd p = {l2cap_channel_fd(&a), POLLOUT, 0};

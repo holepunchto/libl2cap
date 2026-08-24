@@ -4,7 +4,7 @@
 #include <l2cap.h>
 
 int
-main(void) {
+main (void) {
   l2cap_addr_t addr;
 
   assert(l2cap_addr_init("78:AF:08:C0:40:3A", L2CAP_BDADDR_LE_PUBLIC, &addr) == 0);
