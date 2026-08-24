@@ -1,6 +1,7 @@
 list(APPEND tests
   addr
   connect-not-idle
+  listen-not-idle
   echo
   backpressure
   reentrant-close

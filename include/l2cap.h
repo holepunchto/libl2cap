@@ -242,7 +242,8 @@ int
 l2cap_server_set_security (l2cap_server_t *server, uint8_t level);
 
 /**
- * Bind to the `local` adapter address and listen on `psm`. Pass `psm` 0 to
+ * Bind to the `local` adapter address and listen on `psm`. The server must
+ * be initialised and idle — anything else is -EINVAL. Pass `psm` 0 to
  * let the kernel assign one from the LE dynamic range; read it back with
  * `l2cap_server_psm()`. Nothing is accepted until
  * `l2cap_server_accept_start()`.

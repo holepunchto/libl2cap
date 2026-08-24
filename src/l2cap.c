@@ -481,6 +481,8 @@ l2cap_server_set_security (l2cap_server_t *server, uint8_t level) {
 
 int
 l2cap_server_listen (l2cap_server_t *server, const l2cap_addr_t *local, uint16_t psm, int backlog) {
+  if (server->_state != L2CAP_SERVER_STATE_IDLE) return -EINVAL;
+
   int fd = socket(AF_BLUETOOTH, SOCK_SEQPACKET | SOCK_NONBLOCK | SOCK_CLOEXEC, BTPROTO_L2CAP);
   if (fd < 0) return -errno;
 
