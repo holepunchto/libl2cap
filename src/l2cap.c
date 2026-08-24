@@ -355,6 +355,7 @@ l2cap_channel_process (l2cap_channel_t *channel, int events) {
       if (n > 0) {
         channel->_on_read(channel, (size_t) n, channel->_read_buf);
       } else if (n == 0) {
+        channel->_reading = 0; // EOF is delivered once; read_start() re-arms
         channel->_on_read(channel, 0, NULL);
         break;
       } else if (errno == EAGAIN || errno == EWOULDBLOCK) {

@@ -3,6 +3,7 @@ list(APPEND tests
   connect-not-idle
   listen-not-idle
   echo
+  eof-once
   backpressure
   reentrant-close
   drain-after-close

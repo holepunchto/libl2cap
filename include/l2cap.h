@@ -53,8 +53,9 @@ typedef struct l2cap_server_s l2cap_server_t;
 typedef void (*l2cap_connect_cb)(l2cap_channel_t *channel, int status);
 
 /**
- * An inbound SDU. `len == 0` means the channel ended. The buffer is owned by
- * the channel and only valid for the duration of the call.
+ * An inbound SDU. `len == 0` means the channel ended: it is delivered once
+ * and reading stops until `l2cap_channel_read_start()` is called again. The
+ * buffer is owned by the channel and only valid for the duration of the call.
  *
  * Caveat: SOCK_SEQPACKET cannot distinguish a zero-length SDU from EOF; both
  * are reported as `len == 0`.
