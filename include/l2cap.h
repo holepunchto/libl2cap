@@ -275,10 +275,19 @@ l2cap_server_accept_stop(l2cap_server_t *server);
 
 /**
  * Accept one pending connection into `channel`, which must be initialised
- * and idle. Returns 0, or a negated errno - -EAGAIN when nothing is pending.
+ * and idle. Returns 0, or a negated errno - -EAGAIN when nothing is pending,
+ * -ECONNABORTED when only this attempt failed. Any other error stops the
+ * server: `l2cap_server_failed()` turns true and accepting never resumes -
+ * close the server, its descriptor stays readable and polling on would spin.
  */
 int
 l2cap_server_accept(l2cap_server_t *server, l2cap_channel_t *channel);
+
+/**
+ * True after an accept failure the server cannot recover from.
+ */
+int
+l2cap_server_failed(const l2cap_server_t *server);
 
 uint16_t
 l2cap_server_psm(const l2cap_server_t *server);

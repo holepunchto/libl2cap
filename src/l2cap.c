@@ -82,6 +82,7 @@ enum {
 enum {
   L2CAP_SERVER_STATE_IDLE = 0,
   L2CAP_SERVER_STATE_LISTENING,
+  L2CAP_SERVER_STATE_FAILED,
   L2CAP_SERVER_STATE_CLOSED,
 };
 
@@ -591,9 +592,22 @@ l2cap_server_accept(l2cap_server_t *server, l2cap_channel_t *channel) {
   do
     fd = accept4(server->_fd, NULL, NULL, SOCK_NONBLOCK | SOCK_CLOEXEC);
   while (fd < 0 && errno == EINTR);
-  if (fd < 0) return -errno;
+  if (fd < 0) {
+    if (errno == EAGAIN || errno == EWOULDBLOCK || errno == ECONNABORTED) return -errno;
+
+    // Anything else fails the same way on every retry while the descriptor
+    // stays readable; stop accepting instead of letting the caller spin
+    server->_state = L2CAP_SERVER_STATE_FAILED;
+    server->_accepting = 0;
+    return -errno;
+  }
 
   return l2cap_channel_accept(channel, fd);
+}
+
+int
+l2cap_server_failed(const l2cap_server_t *server) {
+  return server->_state == L2CAP_SERVER_STATE_FAILED;
 }
 
 uint16_t
