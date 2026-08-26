@@ -10,6 +10,7 @@ list(APPEND tests
   drain-not-lost
   mtu
   events
+  accept-fatal
   server
 )
 

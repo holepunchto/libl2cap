@@ -71,6 +71,7 @@ main(void) {
   l2cap_channel_t accepted;
   l2cap_channel_init(&accepted, NULL);
   assert(l2cap_server_accept(&server, &accepted) == -EAGAIN);
+  assert(l2cap_server_failed(&server) == 0); // transient, not fatal
 
   // A client connects
   int client_fd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
